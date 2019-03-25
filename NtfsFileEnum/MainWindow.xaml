@@ -6,7 +6,65 @@
         xmlns:local="clr-namespace:NtfsFileEnum"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:ItemsSizeConverter x:Key="ItemsSizeConverter" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Drive" VerticalAlignment="Center"/>
+            <ComboBox x:Name="DrvCombo" Margin="5,0" Width="100" 
+                      VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Sort" VerticalAlignment="Center"/>
+            <ComboBox x:Name="SortCombo" Margin="5,0" Width="100" 
+                      VerticalContentAlignment="Center" SelectedIndex="0" 
+                      SelectionChanged="SortCombo_OnSelectionChanged">
+                <ComboBoxItem>Size</ComboBoxItem>
+                <ComboBoxItem>Extension</ComboBoxItem>
+                <ComboBoxItem>Folder</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <ListBox x:Name="FilesList" Grid.Row="1" 
+                 VirtualizingPanel.IsVirtualizing="True"
+                 VirtualizingPanel.IsVirtualizingWhenGrouping="True" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding FullName}" 
+                                   Margin="5,0" Width="450"/>
+                        <TextBlock Text="{Binding Size,StringFormat=N0}" 
+                                   Margin="5,0" Width="150" TextAlignment="Right"/>
+                        <TextBlock Text="{Binding LastChangeTime, StringFormat=g}" 
+                                   Margin="5,0" Width="200"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" 
+                                           Margin="5,0"/>
+                                <TextBlock Text="(" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                <TextBlock Text="{Binding Items.Count}" VerticalAlignment="Center"/>
+                                <TextBlock Text=" files - " VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Items, 
+                                    Converter={StaticResource ItemsSizeConverter}, StringFormat=N0}"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text=" bytes)" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
+        </ListBox>
+        <TextBlock x:Name="StatusTxt" Grid.Row="2" HorizontalAlignment="Center" Margin="5"/>
     </Grid>
 </Window>
